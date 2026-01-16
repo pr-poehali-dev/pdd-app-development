@@ -3,10 +3,17 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Icon from '@/components/ui/icon';
+import { SignQuiz } from '@/components/SignQuiz';
+import { FindMistake } from '@/components/FindMistake';
+import { FinalTest } from '@/components/FinalTest';
 
 const Index = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showSignQuiz, setShowSignQuiz] = useState(false);
+  const [showFindMistake, setShowFindMistake] = useState(false);
+  const [showFinalTest, setShowFinalTest] = useState(false);
+  const [completedSections, setCompletedSections] = useState<number[]>([]);
 
   const sections = [
     {
@@ -319,40 +326,78 @@ const Index = () => {
       emoji: '🔍',
       title: 'Раздел 6. Практическое обучение',
       subtitle: 'Игры и задания',
-      content: (
+      content: showSignQuiz ? (
+        <div>
+          <Button 
+            variant="ghost" 
+            className="mb-4"
+            onClick={() => setShowSignQuiz(false)}
+          >
+            <Icon name="ChevronLeft" size={20} className="mr-2" />
+            Назад к играм
+          </Button>
+          <SignQuiz />
+        </div>
+      ) : showFindMistake ? (
+        <div>
+          <Button 
+            variant="ghost" 
+            className="mb-4"
+            onClick={() => setShowFindMistake(false)}
+          >
+            <Icon name="ChevronLeft" size={20} className="mr-2" />
+            Назад к играм
+          </Button>
+          <FindMistake />
+        </div>
+      ) : (
         <div className="space-y-4">
           <h3 className="text-2xl font-bold text-gray-800">Проверь свои знания!</h3>
           
-          <Card className="p-5 bg-gradient-to-br from-purple-50 to-pink-50 hover-scale cursor-pointer">
+          <Card className="p-5 bg-gradient-to-br from-purple-50 to-pink-50 hover-scale cursor-pointer"
+            onClick={() => setShowSignQuiz(true)}
+          >
             <div className="text-center space-y-3">
-              <div className="text-5xl">🎮</div>
-              <h4 className="font-bold text-gray-800 text-lg">Интерактивная игра</h4>
-              <p className="text-sm text-gray-600">Скоро здесь появится игра!</p>
-              <Button className="w-full" variant="secondary" disabled>
-                Играть (в разработке)
+              <div className="text-5xl">🚥</div>
+              <h4 className="font-bold text-gray-800 text-lg">Тест на знание знаков</h4>
+              <p className="text-sm text-gray-600">Проверь, знаешь ли ты дорожные знаки!</p>
+              <Button className="w-full">
+                <Icon name="Play" size={20} className="mr-2" />
+                Начать тест
               </Button>
             </div>
           </Card>
 
-          <Card className="p-5 bg-gradient-to-br from-blue-50 to-cyan-50 hover-scale cursor-pointer">
+          <Card className="p-5 bg-gradient-to-br from-blue-50 to-cyan-50 hover-scale cursor-pointer"
+            onClick={() => setShowFindMistake(true)}
+          >
             <div className="text-center space-y-3">
               <div className="text-5xl">🔎</div>
               <h4 className="font-bold text-gray-800 text-lg">Найди ошибку</h4>
               <p className="text-sm text-gray-600">Игра на внимательность</p>
-              <Button className="w-full" variant="secondary" disabled>
-                Начать (в разработке)
+              <Button className="w-full">
+                <Icon name="Play" size={20} className="mr-2" />
+                Начать игру
               </Button>
             </div>
           </Card>
 
-          <Card className="p-5 bg-gradient-to-br from-green-50 to-emerald-50 hover-scale cursor-pointer">
+          <Card className="p-5 bg-gradient-to-br from-green-50 to-emerald-50">
             <div className="text-center space-y-3">
-              <div className="text-5xl">🚦</div>
-              <h4 className="font-bold text-gray-800 text-lg">Дорожные ситуации</h4>
-              <p className="text-sm text-gray-600">Реши задачки</p>
-              <Button className="w-full" variant="secondary" disabled>
-                Решать (в разработке)
-              </Button>
+              <div className="text-5xl">🏆</div>
+              <h4 className="font-bold text-gray-800 text-lg">Твой прогресс</h4>
+              <p className="text-sm text-gray-600">
+                Пройдено разделов: {completedSections.length} / 8
+              </p>
+              <div className="flex gap-2 justify-center flex-wrap">
+                {[1,2,3,4,5,6,7,8].map(num => (
+                  <div key={num} className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                    style={{ backgroundColor: completedSections.includes(num) ? '#10b981' : '#e5e7eb' }}
+                  >
+                    {completedSections.includes(num) ? '✓' : num}
+                  </div>
+                ))}
+              </div>
             </div>
           </Card>
         </div>
@@ -418,7 +463,19 @@ const Index = () => {
       emoji: '📝',
       title: 'Раздел 8. Итоговое тестирование',
       subtitle: 'Проверь свои знания',
-      content: (
+      content: showFinalTest ? (
+        <div>
+          <Button 
+            variant="ghost" 
+            className="mb-4"
+            onClick={() => setShowFinalTest(false)}
+          >
+            <Icon name="ChevronLeft" size={20} className="mr-2" />
+            Назад к информации
+          </Button>
+          <FinalTest />
+        </div>
+      ) : (
         <div className="space-y-4">
           <div className="text-center space-y-4">
             <div className="text-6xl animate-bounce">🎓</div>
@@ -435,27 +492,27 @@ const Index = () => {
                 <span className="text-lg font-bold text-primary">15</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-gray-700">Время:</span>
-                <span className="text-lg font-bold text-primary">15 минут</span>
+                <span className="text-sm font-semibold text-gray-700">Проходной балл:</span>
+                <span className="text-lg font-bold text-primary">12+ правильных</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-gray-700">Для сертификата:</span>
-                <span className="text-lg font-bold text-green-600">12+ правильных</span>
+                <span className="text-sm font-semibold text-gray-700">Награда:</span>
+                <span className="text-lg font-bold text-green-600">🏆 Сертификат</span>
               </div>
             </div>
           </Card>
 
           <Button 
             className="w-full text-lg py-6 hover-scale"
-            onClick={() => window.open('https://forms.yandex.ru/', '_blank')}
+            onClick={() => setShowFinalTest(true)}
           >
-            <Icon name="ExternalLink" size={20} className="mr-2" />
+            <Icon name="Play" size={20} className="mr-2" />
             Начать тестирование
           </Button>
 
           <div className="bg-green-50 border-2 border-green-300 p-4 rounded-xl text-center">
             <p className="text-sm text-gray-700">
-              ✨ После прохождения теста ты получишь сертификат на почту!
+              ✨ После успешного прохождения теста ты получишь сертификат!
             </p>
           </div>
         </div>
@@ -475,20 +532,34 @@ const Index = () => {
   ];
 
   const handleNext = () => {
+    if (!completedSections.includes(currentSection) && currentSection > 0) {
+      setCompletedSections([...completedSections, currentSection]);
+      const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZUQ8SV6zn77BdGAg+l9z0yHwrBSJ7zPDZjT8JE2Gx6+yfUQ0PUqXj87BfGwk7k9n0zn4uBSCAy/HajUIIEly06+ugUg0OTaLh8bZiHAdAmdz0wXkkBSR+yO/bjkcIEGGy7OyfTw0QUKPi8bZjHAlAnd7zwHwrBSF/yO/cjkUIDl+16+mfUA0QTaHh8bdjHgpAneD0wn4rBSF+xu7cjkUIDV2y6+qfUw0ST6Hi8rZjHgpBneD0w38sBS==');
+      audio.play().catch(() => {});
+    }
     if (currentSection < sections.length - 1) {
       setCurrentSection(currentSection + 1);
+      setShowSignQuiz(false);
+      setShowFindMistake(false);
+      setShowFinalTest(false);
     }
   };
 
   const handlePrev = () => {
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1);
+      setShowSignQuiz(false);
+      setShowFindMistake(false);
+      setShowFinalTest(false);
     }
   };
 
   const handleMenuClick = (id: number) => {
     setCurrentSection(id);
     setMenuOpen(false);
+    setShowSignQuiz(false);
+    setShowFindMistake(false);
+    setShowFinalTest(false);
   };
 
   return (
@@ -511,11 +582,14 @@ const Index = () => {
                   <Button
                     key={item.id}
                     variant={currentSection === item.id ? "default" : "ghost"}
-                    className="w-full justify-start text-left hover-scale"
+                    className="w-full justify-start text-left hover-scale relative"
                     onClick={() => handleMenuClick(item.id)}
                   >
                     <span className="text-2xl mr-3">{item.emoji}</span>
-                    <span className="text-sm">{item.title}</span>
+                    <span className="text-sm flex-1">{item.title}</span>
+                    {completedSections.includes(item.id) && (
+                      <span className="text-green-500 text-lg">✓</span>
+                    )}
                   </Button>
                 ))}
               </div>
